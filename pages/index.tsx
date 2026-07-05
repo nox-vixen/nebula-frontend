@@ -49,7 +49,7 @@ interface Props {
 
 
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
-        <Banner netflixOriginals={featured} />
+        <Banner featured={featured} />
         <section className="md:space-y-24">
           <Row title="Trending Now" movies={trending} />
           <Row title="Top Rated" movies={topRated} />

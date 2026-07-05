@@ -15,7 +15,7 @@ export default async function handler(
   try {
     const [
       trending,
-      originals,
+      featured,
       topRated,
       action,
       comedy,
@@ -34,7 +34,7 @@ export default async function handler(
     ]);
 
     res.status(200).json({
-  featured: originals.results,
+  featured: featured.results,,
   trending: trending.results,
   topRated: topRated.results,
   action: action.results,
