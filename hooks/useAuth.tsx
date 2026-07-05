@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import { getDeviceId } from "../lib/nebula/device"
 
 interface IUser {
   uid: string
@@ -31,9 +32,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Temporary Phase 1 placeholder.
   // This will become Nebula Device Identity in Milestone 1.3.
-const [user, setUser] = useState<IUser | null>({
-  uid: "temporary-device",
-})
+const [user, setUser] = useState<IUser | null>(null)
+
+useEffect(() => {
+  setUser({
+    uid: getDeviceId(),
+  })
+}, [])
 
   const signUp = async () => {
     router.push("/")
