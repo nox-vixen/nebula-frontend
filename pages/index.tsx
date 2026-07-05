@@ -30,7 +30,7 @@ const Home = ({
   topRated,
   trendingNow,
 }: Props) => {
-  const { loading } = useAuth()
+  const { loading, user } = useAuth()
   const showModal = useRecoilValue(modalState)
 
   if (loading) return null
@@ -47,6 +47,11 @@ const Home = ({
       </Head>
 
       <Header />
+
+      <p className="fixed top-2 left-2 z-50 rounded bg-black/80 px-2 py-1 text-xs text-green-400">
+  Device ID: {user?.uid}
+</p>
+
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner netflixOriginals={netflixOriginals} />
         <section className="md:space-y-24">
