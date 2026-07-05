@@ -48,10 +48,11 @@ useEffect(() => {
     router.push("/")
   }
 
-  const logout = async () => {
-    setUser(null)
-    router.push("/login")
-  }
+ const logout = async () => {
+  setUser({
+    uid: getDeviceId(),
+  })
+}
 
   const value = useMemo(
     () => ({
