@@ -34,7 +34,7 @@ export default async function handler(
     ]);
 
     res.status(200).json({
-  featured: featured.results,,
+  featured: featured.results,
   trending: trending.results,
   topRated: topRated.results,
   action: action.results,
