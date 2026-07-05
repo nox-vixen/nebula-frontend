@@ -31,9 +31,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Temporary Phase 1 placeholder.
   // This will become Nebula Device Identity in Milestone 1.3.
-  const [user, setUser] = useState<IUser>({
-    uid: "temporary-device",
-  })
+const [user, setUser] = useState<IUser | null>({
+  uid: "temporary-device",
+})
 
   const signUp = async () => {
     router.push("/")
