@@ -27,13 +27,10 @@ function Header() {
   return (
     <header className={`${isScrolled && 'bg-[#141414]'}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
-        <Image
-          src="/netflix_logo.svg"
-          width={100}
-          height={100}
-          className="cursor-pointer object-contain"
-          alt="netflix logo"
-        />
+
+           <h1 className="cursor-pointer text-2xl font-extrabold tracking-wide text-white">
+  Nebula<span className="text-red-600">OS</span>
+</h1>
 
         <ul className="hidden space-x-4 md:flex">
           <li className="headerLink">Home</li>
@@ -49,12 +46,13 @@ function Header() {
         <p className="hidden lg:inline">Kids</p>
         <BellIcon className="h-6 w-6" />
         {/* <Link href="/account"> */}
+        
         <Image
-          onClick={logout}
-          src="/avatar"
-          alt=""
-          className="cursor-pointer rounded"
-        />
+  src="/avatar"
+  alt=""
+  className="cursor-pointer rounded"
+/>
+
         {/* </Link> */}
       </div>
     </header>

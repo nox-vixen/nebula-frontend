@@ -42,7 +42,7 @@ const Home = ({
       }`}
     >
       <Head>
-        <title>Home - Netflix</title>
+        <title>Home - NebulaOS</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
