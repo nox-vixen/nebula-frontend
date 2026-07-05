@@ -34,15 +34,16 @@ export default async function handler(
     ]);
 
     res.status(200).json({
-      netflixOriginals: originals.results,
-      trendingNow: trending.results,
-      topRated: topRated.results,
-      actionMovies: action.results,
-      comedyMovies: comedy.results,
-      horrorMovies: horror.results,
-      romanceMovies: romance.results,
-      documentaries: documentaries.results,
-    });
+  featured: originals.results,
+  trending: trending.results,
+  topRated: topRated.results,
+  action: action.results,
+  comedy: comedy.results,
+  horror: horror.results,
+  romance: romance.results,
+  documentaries: documentaries.results,
+});
+
   } catch (err) {
     res.status(500).json({
       error: "Failed to load provider",

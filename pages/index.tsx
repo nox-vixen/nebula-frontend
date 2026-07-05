@@ -9,25 +9,25 @@ import useAuth from '../hooks/useAuth'
 import { Movie } from '../typings'
 
 interface Props {
-  netflixOriginals: Movie[]
-  trendingNow: Movie[]
+  featured: Movie[]
+  trending: Movie[]
   topRated: Movie[]
-  actionMovies: Movie[]
-  comedyMovies: Movie[]
-  horrorMovies: Movie[]
-  romanceMovies: Movie[]
+  action: Movie[]
+  comedy: Movie[]
+  horror: Movie[]
+  romance: Movie[]
   documentaries: Movie[]
 }
 
-const Home = ({
-  netflixOriginals,
-  actionMovies,
-  comedyMovies,
+  const Home = ({
+  featured,
+  action,
+  comedy,
   documentaries,
-  horrorMovies,
-  romanceMovies,
+  horror,
+  romance,
   topRated,
-  trendingNow,
+  trending,
 }: Props) => {
   const { loading } = useAuth()
   const showModal = useRecoilValue(modalState)
@@ -49,15 +49,15 @@ const Home = ({
 
 
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
-        <Banner netflixOriginals={netflixOriginals} />
+        <Banner netflixOriginals={featured} />
         <section className="md:space-y-24">
-          <Row title="Trending Now" movies={trendingNow} />
+          <Row title="Trending Now" movies={trending} />
           <Row title="Top Rated" movies={topRated} />
-          <Row title="Action Thrillers" movies={actionMovies} />
+          <Row title="Action Thrillers" movies={action} />
           {/* My List Component */}
-          <Row title="Comedies" movies={comedyMovies} />
-          <Row title="Scary Movies" movies={horrorMovies} />
-          <Row title="Romance Movies" movies={romanceMovies} />
+          <Row title="Comedies" movies={comedy} />
+          <Row title="Scary Movies" movies={horror} />
+          <Row title="Romance Movies" movies={romance} />
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
