@@ -1,17 +1,12 @@
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-} from 'firebase/auth'
-
 import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { auth } from '../firebase'
+import { createContext, useContext, useMemo, useState } from 'react'
+
+interface IUser {
+  uid: string
+}
 
 interface IAuth {
-  user: User | null
+  user: IUser | null
   signUp: (email: string, password: string) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
@@ -28,87 +23,46 @@ const AuthContext = createContext<IAuth>({
   loading: false,
 })
 
-interface AuthProviderProps {
-  children: React.ReactNode
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
-  const [error, setError] = useState(null)
-  const [initialLoading, setInitialLoading] = useState(true)
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
 
-  // Persisting the user
-  useEffect(
-    () =>
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-  setUser(user)
-  setLoading(false)
-} else {
-  // Temporary Phase 0 bypass
-  setUser({} as User)
-  setLoading(false)
-}
+  const [loading] = useState(false)
+  const [error] = useState<string | null>(null)
 
-        setInitialLoading(false)
-      }),
-    [auth]
-  )
+  // Temporary Phase 1 placeholder.
+  // This will become Nebula Device Identity in Milestone 1.3.
+  const [user, setUser] = useState<IUser>({
+    uid: "temporary-device",
+  })
 
-  const signUp = async (email: string, password: string) => {
-    setLoading(true)
-
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        setUser(userCredential.user)
-        router.push('/')
-        setLoading(false)
-      })
-      .catch((error) => alert(error.message))
-      .finally(() => setLoading(false))
+  const signUp = async () => {
+    router.push("/")
   }
 
-  const signIn = async (email: string, password: string) => {
-    setLoading(true)
-
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        setUser(userCredential.user)
-        router.push('/')
-        setLoading(false)
-      })
-      .catch((error) => alert(error.message))
-      .finally(() => setLoading(false))
+  const signIn = async () => {
+    router.push("/")
   }
 
   const logout = async () => {
-    setLoading(true)
-
-    signOut(auth)
-      .then(() => {
-        setUser(null)
-      })
-      .catch((error) => alert(error.message))
-      .finally(() => setLoading(false))
+    setUser(null)
+    router.push("/login")
   }
 
-  const memoedValue = useMemo(
+  const value = useMemo(
     () => ({
       user,
       signUp,
       signIn,
-      loading,
       logout,
       error,
+      loading,
     }),
-    [user, loading]
+    [user, loading, error]
   )
 
   return (
-    <AuthContext.Provider value={memoedValue}>
-      {!initialLoading && children}
+    <AuthContext.Provider value={value}>
+      {children}
     </AuthContext.Provider>
   )
 }
