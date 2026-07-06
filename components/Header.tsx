@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -47,11 +46,6 @@ function Header() {
         <BellIcon className="h-6 w-6" />
         {/* <Link href="/account"> */}
         
-        <Image
-  src="/avatar"
-  alt=""
-  className="cursor-pointer rounded"
-/>
 
         {/* </Link> */}
       </div>
