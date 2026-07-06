@@ -40,19 +40,41 @@ export default function SearchPage() {
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search movies..."
-          className="w-full rounded bg-[#222] p-4 text-lg outline-none"
+          placeholder="Search movies, TV shows..."
+          className="w-full rounded-md bg-[#222] p-4 text-lg outline-none ring-1 ring-transparent focus:ring-red-600"
         />
 
-        {loading && (
-          <p className="mt-6 text-gray-400">Searching...</p>
+        {!query.trim() && (
+          <p className="mt-8 text-center text-gray-500">
+            Start typing to search NebulaOS.
+          </p>
         )}
 
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
-          {results.map((movie) => (
-            <Thumbnail key={movie.id} movie={movie} />
-          ))}
-        </div>
+        {loading && (
+          <p className="mt-8 text-center text-gray-400 animate-pulse">
+            Searching...
+          </p>
+        )}
+
+        {!loading && query.trim() && (
+          <p className="mt-6 text-sm text-gray-400">
+            {results.length} result{results.length !== 1 ? "s" : ""} found
+          </p>
+        )}
+
+        {!loading && query.trim() && results.length === 0 && (
+          <p className="mt-10 text-center text-gray-500">
+            No results found.
+          </p>
+        )}
+
+        {results.length > 0 && (
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
+            {results.map((movie) => (
+              <Thumbnail key={movie.id} movie={movie} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
