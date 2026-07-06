@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
-import Thumbnail from "../components/Thumbnail";
+import SearchCard from "../components/SearchCard";
 import { NebulaSearchResult } from "../models/NebulaSearchResult";
 
 export default function SearchPage() {
@@ -71,7 +71,7 @@ export default function SearchPage() {
         {results.length > 0 && (
           <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
             {results.map((movie) => (
-              <Thumbnail key={movie.id} movie={movie} />
+              <SearchCard key={movie.id} movie={movie} />
             ))}
           </div>
         )}
