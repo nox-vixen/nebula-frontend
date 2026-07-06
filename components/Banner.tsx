@@ -1,75 +1,56 @@
-import Image from "next/image";
+import { InformationCircleIcon, PlayIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaPlay } from "react-icons/fa";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { useRecoilState } from "recoil";
-import { modalState, movieState } from "../atoms/modalAtom";
 import { NebulaSearchResult } from "../models/NebulaSearchResult";
-import Skeleton from "./Skeleton";
 
-interface Props {
-  featured: NebulaSearchResult[];
-}
-
-function Banner({ featured }: Props) {
+function Banner() {
   const [movie, setMovie] = useState<NebulaSearchResult | null>(null);
-  const [loaded, setLoaded] = useState(false);
-
-  const [, setShowModal] = useRecoilState(modalState);
-  const [, setCurrentMovie] = useRecoilState(movieState);
 
   useEffect(() => {
-    if (featured.length > 0) {
-      setMovie(featured[Math.floor(Math.random() * featured.length)]);
-      setLoaded(false);
+    async function load() {
+      const res = await fetch("/api/home");
+      const data = await res.json();
+      const list = data.netflixOriginals || data.trending || data.results || [];
+      if (list.length) {
+        setMovie(list[Math.floor(Math.random() * list.length)]);
+      }
     }
-  }, [featured]);
+    load();
+  }, []);
+
+  if (!movie) return null;
 
   return (
-    <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
-      <div className="absolute top-0 left-0 -z-10 h-[95vh] w-screen overflow-hidden">
-        {!loaded && <Skeleton className="absolute inset-0" />}
+    <div
+      className="flex h-[95vh] flex-col justify-end bg-cover bg-center"
+      style={{ backgroundImage: `url(${movie.backdrop})` }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
 
-        {movie && (
-          <Image
-            src={movie.backdrop || movie.poster}
-            layout="fill"
-            objectFit="cover"
-            alt={movie.title}
-            className={`transition-opacity duration-700 ${
-              loaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoadingComplete={() => setLoaded(true)}
-          />
-        )}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-32">
+        <h1 className="text-4xl font-bold md:text-6xl">{movie.title}</h1>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
-      </div>
+        <p className="mt-4 max-w-2xl text-lg text-gray-200 line-clamp-3">
+          {movie.overview}
+        </p>
 
-      <h1 className="text-2xl font-bold md:text-4xl lg:text-7xl">
-        {movie?.title}
-      </h1>
+        <div className="mt-8 flex gap-4">
+          <Link
+            href={`/movie/${movie.id}`}
+            className="flex items-center gap-2 rounded bg-white px-6 py-3 font-semibold text-black transition hover:bg-gray-200"
+          >
+            <PlayIcon className="h-6 w-6" />
+            Play
+          </Link>
 
-      <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
-        {movie?.overview}
-      </p>
-
-      <div className="flex space-x-3">
-        <button className="bannerButton bg-white text-black">
-          <FaPlay className="h-4 w-4 text-black md:h-7 md:w-7" /> Play
-        </button>
-
-        <button
-          className="bannerButton bg-[gray]/70"
-          onClick={() => {
-            if (!movie) return;
-            setCurrentMovie(movie);
-            setShowModal(true);
-          }}
-        >
-          More Info{" "}
-          <InformationCircleIcon className="h-5 w-5 md:h-8 md:w-8" />
-        </button>
+          <Link
+            href={`/movie/${movie.id}`}
+            className="flex items-center gap-2 rounded bg-gray-600/70 px-6 py-3 font-semibold text-white transition hover:bg-gray-500/70"
+          >
+            <InformationCircleIcon className="h-6 w-6" />
+            More Info
+          </Link>
+        </div>
       </div>
     </div>
   );
