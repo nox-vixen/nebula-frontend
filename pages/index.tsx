@@ -68,6 +68,7 @@ interface Props {
 
 export default Home
 
+
 export const getServerSideProps = async () => {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -76,18 +77,16 @@ export const getServerSideProps = async () => {
   const res = await fetch(`${baseUrl}/api/home`)
   const json = await res.json()
 
-  const data = Array.isArray(json.data) ? json.data : []
-
   return {
     props: {
-      featured: data.slice(0, 5),
-      trending: data,
-      topRated: data,
-      action: data,
-      comedy: data,
-      horror: data,
-      romance: data,
-      documentaries: data,
+      featured: json.featured ?? [],
+      trending: json.trending ?? [],
+      topRated: json.topRated ?? [],
+      action: json.action ?? [],
+      comedy: json.comedy ?? [],
+      horror: json.horror ?? [],
+      romance: json.romance ?? [],
+      documentaries: json.documentaries ?? [],
     },
   }
 }
