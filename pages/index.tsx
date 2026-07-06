@@ -74,9 +74,20 @@ export const getServerSideProps = async () => {
     "https://nebula-frontend-kz85.onrender.com"
 
   const res = await fetch(`${baseUrl}/api/home`)
-  const data = await res.json()
+  const json = await res.json()
+
+  const data = Array.isArray(json.data) ? json.data : []
 
   return {
-    props: data,
+    props: {
+      featured: data.slice(0, 5),
+      trending: data,
+      topRated: data,
+      action: data,
+      comedy: data,
+      horror: data,
+      romance: data,
+      documentaries: data,
+    },
   }
 }
