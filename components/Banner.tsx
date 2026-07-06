@@ -3,18 +3,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NebulaSearchResult } from "../models/NebulaSearchResult";
 
-interface Props {
-  featured: NebulaSearchResult[];
-}
-
-function Banner({ featured }: Props) {
+function Banner() {
   const [movie, setMovie] = useState<NebulaSearchResult | null>(null);
 
   useEffect(() => {
-    if (featured?.length) {
-      setMovie(featured[Math.floor(Math.random() * featured.length)]);
+    async function load() {
+      const res = await fetch("/api/home");
+      const data = await res.json();
+      const list = data.netflixOriginals || data.trending || data.results || [];
+      if (list.length) {
+        setMovie(list[Math.floor(Math.random() * list.length)]);
+      }
     }
-  }, [featured]);
+    load();
+  }, []);
 
   if (!movie) return null;
 
