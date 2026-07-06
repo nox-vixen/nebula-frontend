@@ -34,7 +34,7 @@ function Header() {
 
       <div className="flex items-center space-x-4 text-sm font-light">
         <Link href="/search">
-          <MagnifyingGlassIcon className="hidden h-6 w-6 cursor-pointer transition hover:scale-110 sm:inline" />
+          <MagnifyingGlassIcon className="h-6 w-6 cursor-pointer transition hover:scale-110" />
         </Link>
 
         <p className="hidden lg:inline">Kids</p>
