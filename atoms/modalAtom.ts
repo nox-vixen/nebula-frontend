@@ -1,12 +1,12 @@
-import { atom } from 'recoil'
-import { Movie } from '../typings'
+import { atom } from "recoil";
+import { NebulaSearchResult } from "../models/NebulaSearchResult";
 
-export const modalState = atom({
-  key: 'modalState',
+export const modalState = atom<boolean>({
+  key: "modalState",
   default: false,
-})
+});
 
-export const movieState = atom<Movie | null>({
-  key: 'movieState',
+export const movieState = atom<NebulaSearchResult | null>({
+  key: "movieState",
   default: null,
-})
+});

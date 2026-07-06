@@ -6,17 +6,17 @@ import Header from '../components/Header'
 import Modal from '../components/Modal'
 import Row from '../components/Row'
 import useAuth from '../hooks/useAuth'
-import { Movie } from '../typings'
+import { NebulaSearchResult } from '../models/NebulaSearchResult'
 
 interface Props {
-  featured: Movie[]
-  trending: Movie[]
-  topRated: Movie[]
-  action: Movie[]
-  comedy: Movie[]
-  horror: Movie[]
-  romance: Movie[]
-  documentaries: Movie[]
+  featured: NebulaSearchResult[]
+  trending: NebulaSearchResult[]
+  topRated: NebulaSearchResult[]
+  action: NebulaSearchResult[]
+  comedy: NebulaSearchResult[]
+  horror: NebulaSearchResult[]
+  romance: NebulaSearchResult[]
+  documentaries: NebulaSearchResult[]
 }
 
   const Home = ({

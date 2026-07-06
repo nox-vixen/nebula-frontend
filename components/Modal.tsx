@@ -26,7 +26,7 @@ function Modal() {
     async function fetchMovie() {
       const data = await fetch(
         `https://api.themoviedb.org/3/${
-          movie?.media_type === 'tv' ? 'tv' : 'movie'
+          movie?.type === 'series' ? 'tv' : 'movie'
         }/${movie?.id}?api_key=${
           process.env.NEXT_PUBLIC_API_KEY
         }&language=en-US&append_to_response=videos`
@@ -106,10 +106,10 @@ function Modal() {
           <div className="space-y-6 text-lg">
             <div className="flex items-center space-x-2 text-sm">
               <p className="font-semibold text-green-400">
-                {movie!.vote_average * 10}% Match
+                {movie!.rating * 10}% Match
               </p>
               <p className="font-light">
-                {movie?.release_date || movie?.first_air_date}
+                {movie?.year}
               </p>
               <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
                 HD
@@ -126,12 +126,12 @@ function Modal() {
 
                 <div>
                   <span className="text-[gray]">Original language: </span>
-                  {movie?.original_language}
+                  {"Unknown"}
                 </div>
 
                 <div>
                   <span className="text-[gray]">Total votes: </span>
-                  {movie?.vote_count}
+                  {'N/A'}
                 </div>
               </div>
             </div>
