@@ -69,10 +69,12 @@ interface Props {
 export default Home
 
 
-export const getServerSideProps = async () => {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://nebula-frontend-kz85.onrender.com"
+export const getServerSideProps = async ({ req }: any) => {
+  const protocol =
+    process.env.NODE_ENV === "development" ? "http" : "https"
+
+  const host = req.headers.host
+  const baseUrl = `${protocol}://${host}`
 
   const res = await fetch(`${baseUrl}/api/home`)
   const json = await res.json()
