@@ -20,6 +20,7 @@ interface Props {
 }
 
 export default function Home({ banner, sections }: Props) {
+  console.log("Sections:", sections.map(s => ({ title: s.title, items: s.items.length })));
   const { loading } = useAuth();
   const showModal = useRecoilValue(modalState);
 
