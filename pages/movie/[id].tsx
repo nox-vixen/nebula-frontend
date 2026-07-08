@@ -67,7 +67,7 @@ export default function MoviePage({ movie }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const res = await fetch(
-    `https://nebula-core-icht.onrender.com/api/movie/${params?.id}`
+    `/api/movie/${params?.id}`
   );
 
   const json = await res.json();
