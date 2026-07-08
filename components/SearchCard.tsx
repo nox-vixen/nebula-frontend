@@ -11,7 +11,7 @@ export default function SearchCard({ movie }: Props) {
     <Link href={`/movie/${movie.id}`}>
       <div className="cursor-pointer overflow-hidden rounded-lg transition hover:scale-105">
         <Image
-          src={movie.poster || movie.backdrop}
+          src={movie.poster ?? movie.backdrop ?? "/placeholder.png"}
           alt={movie.title}
           width={500}
           height={750}
