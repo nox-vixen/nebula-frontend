@@ -2,14 +2,17 @@ export interface NebulaSearchResult {
   id: string;
   provider: string;
 
-  type: "movie" | "series";
+  type: "movie" | "tv";
 
   title: string;
-  overview: string;
 
-  poster: string;
-  backdrop: string;
+  overview?: string;
 
-  rating: number;
-  year: number;
+  poster?: string;
+
+  backdrop?: string;
+
+  rating?: number;
+
+  year?: number;
 }

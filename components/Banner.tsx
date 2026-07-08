@@ -10,7 +10,7 @@ interface Props {
   featured: NebulaSearchResult[];
 }
 
-function Banner({ featured }: Props) {
+export default function Banner({ featured }: Props) {
   const [movie, setMovie] = useState<NebulaSearchResult | null>(null);
 
   const [, setShowModal] = useRecoilState(modalState);
@@ -18,18 +18,16 @@ function Banner({ featured }: Props) {
 
   useEffect(() => {
     if (featured.length > 0) {
-      setMovie(
-        featured[Math.floor(Math.random() * featured.length)]
-      );
+      setMovie(featured[Math.floor(Math.random() * featured.length)]);
     }
   }, [featured]);
 
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 -z-10 h-[95vh] w-screen">
-        {movie && (
+        {movie && (movie.backdrop || movie.poster) && (
           <Image
-            src={movie.backdrop || movie.poster}
+            src={movie.backdrop || movie.poster!}
             layout="fill"
             objectFit="cover"
             alt={movie.title}
@@ -38,11 +36,11 @@ function Banner({ featured }: Props) {
       </div>
 
       <h1 className="text-2xl font-bold md:text-4xl lg:text-7xl">
-        {movie?.title}
+        {movie?.title ?? ""}
       </h1>
 
       <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
-        {movie?.overview}
+        {movie?.overview ?? ""}
       </p>
 
       <div className="flex space-x-3">
@@ -55,7 +53,6 @@ function Banner({ featured }: Props) {
           className="bannerButton bg-[gray]/70"
           onClick={() => {
             if (!movie) return;
-
             setCurrentMovie(movie);
             setShowModal(true);
           }}
@@ -67,5 +64,3 @@ function Banner({ featured }: Props) {
     </div>
   );
 }
-
-export default Banner;

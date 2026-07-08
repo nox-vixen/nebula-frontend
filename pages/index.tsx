@@ -1,43 +1,34 @@
-import Head from 'next/head'
-import { useRecoilValue } from 'recoil'
-import { modalState } from '../atoms/modalAtom'
-import Banner from '../components/Banner'
-import Header from '../components/Header'
-import Modal from '../components/Modal'
-import Row from '../components/Row'
-import useAuth from '../hooks/useAuth'
-import { NebulaSearchResult } from '../models/NebulaSearchResult'
+import Head from "next/head";
+import { useRecoilValue } from "recoil";
+import { modalState } from "../atoms/modalAtom";
+import Banner from "../components/Banner";
+import Header from "../components/Header";
+import Modal from "../components/Modal";
+import Row from "../components/Row";
+import useAuth from "../hooks/useAuth";
+import { NebulaSearchResult } from "../models/NebulaSearchResult";
 
-interface Props {
-  featured: NebulaSearchResult[]
-  trending: NebulaSearchResult[]
-  topRated: NebulaSearchResult[]
-  action: NebulaSearchResult[]
-  comedy: NebulaSearchResult[]
-  horror: NebulaSearchResult[]
-  romance: NebulaSearchResult[]
-  documentaries: NebulaSearchResult[]
+interface HomeSection {
+  title: string;
+  type: string;
+  items: NebulaSearchResult[];
 }
 
-  const Home = ({
-  featured,
-  action,
-  comedy,
-  documentaries,
-  horror,
-  romance,
-  topRated,
-  trending,
-}: Props) => {
-  const { loading } = useAuth()
-  const showModal = useRecoilValue(modalState)
+interface Props {
+  banner: NebulaSearchResult[];
+  sections: HomeSection[];
+}
 
-  if (loading) return null
+export default function Home({ banner, sections }: Props) {
+  const { loading } = useAuth();
+  const showModal = useRecoilValue(modalState);
+
+  if (loading) return null;
 
   return (
     <div
       className={`relative h-screen bg-gradient-to-b lg:h-[140vh] ${
-        showModal && '!h-screen overflow-hidden'
+        showModal && "!h-screen overflow-hidden"
       }`}
     >
       <Head>
@@ -47,48 +38,48 @@ interface Props {
 
       <Header />
 
-
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
-        <Banner featured={featured} />
+        <Banner featured={banner} />
+
         <section className="md:space-y-24">
-          <Row title="Trending Now" movies={trending} />
-          <Row title="Top Rated" movies={topRated} />
-          <Row title="Action Thrillers" movies={action} />
-          {/* My List Component */}
-          <Row title="Comedies" movies={comedy} />
-          <Row title="Scary Movies" movies={horror} />
-          <Row title="Romance Movies" movies={romance} />
-          <Row title="Documentaries" movies={documentaries} />
+          {sections.map((section) => (
+            <Row
+              key={section.title}
+              title={section.title}
+              movies={section.items}
+            />
+          ))}
         </section>
       </main>
+
       {showModal && <Modal />}
     </div>
-  )
+  );
 }
 
-export default Home
-
-
-export const getServerSideProps = async ({ req }: any) => {
+export async function getServerSideProps({ req }: any) {
   const protocol =
-    process.env.NODE_ENV === "development" ? "http" : "https"
+    process.env.NODE_ENV === "development" ? "http" : "https";
 
-  const host = req.headers.host
-  const baseUrl = `${protocol}://${host}`
+  const host = req.headers.host;
+  const baseUrl = `${protocol}://${host}`;
 
-  const res = await fetch(`${baseUrl}/api/home`)
-  const json = await res.json()
+  try {
+    const res = await fetch(`${baseUrl}/api/home`);
+    const json = await res.json();
 
-  return {
-    props: {
-      featured: json.featured ?? [],
-      trending: json.trending ?? [],
-      topRated: json.topRated ?? [],
-      action: json.action ?? [],
-      comedy: json.comedy ?? [],
-      horror: json.horror ?? [],
-      romance: json.romance ?? [],
-      documentaries: json.documentaries ?? [],
-    },
+    return {
+      props: {
+        banner: json.sections?.banner ?? [],
+        sections: json.sections?.sections ?? [],
+      },
+    };
+  } catch {
+    return {
+      props: {
+        banner: [],
+        sections: [],
+      },
+    };
   }
 }
