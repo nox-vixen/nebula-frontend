@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";
 import { NebulaSearchResult } from "../models/NebulaSearchResult";
@@ -7,28 +7,70 @@ export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NebulaSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const controllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
+    controllerRef.current?.abort();
+
     if (!query.trim()) {
       setResults([]);
+      setLoading(false);
+      setError("");
       return;
     }
 
-    const timer = setTimeout(async () => {
-      setLoading(true);
+    const timer = setTimeout(() => {
+      const controller = new AbortController();
+      controllerRef.current = controller;
 
-      try {
-        const res = await fetch(
-          "/api/search?q=" + encodeURIComponent(query)
-        );
-        const json = await res.json();
-        setResults(json.results || []);
-      } finally {
-        setLoading(false);
-      }
+      const requestId = ++requestIdRef.current;
+
+      setLoading(true);
+      setError("");
+
+      fetch("/api/search?q=" + encodeURIComponent(query), {
+        signal: controller.signal,
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            throw new Error("Search request failed.");
+          }
+
+          return res.json();
+        })
+        .then((json) => {
+          if (requestId !== requestIdRef.current) {
+            return;
+          }
+
+          setResults(Array.isArray(json.results) ? json.results : []);
+        })
+        .catch((err: any) => {
+          if (err?.name === "AbortError") {
+            return;
+          }
+
+          if (requestId !== requestIdRef.current) {
+            return;
+          }
+
+          setResults([]);
+          setError(err?.message ?? "Search failed.");
+        })
+        .finally(() => {
+          if (requestId === requestIdRef.current) {
+            setLoading(false);
+          }
+        });
     }, 400);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controllerRef.current?.abort();
+    };
   }, [query]);
 
   return (
@@ -51,18 +93,24 @@ export default function SearchPage() {
         )}
 
         {loading && (
-          <p className="mt-8 text-center text-gray-400 animate-pulse">
+          <p className="mt-8 animate-pulse text-center text-gray-400">
             Searching...
           </p>
         )}
 
-        {!loading && query.trim() && (
+        {!loading && error && (
+          <p className="mt-8 text-center text-red-400">
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && query.trim() && (
           <p className="mt-6 text-sm text-gray-400">
             {results.length} result{results.length !== 1 ? "s" : ""} found
           </p>
         )}
 
-        {!loading && query.trim() && results.length === 0 && (
+        {!loading && !error && query.trim() && results.length === 0 && (
           <p className="mt-10 text-center text-gray-500">
             No results found.
           </p>
