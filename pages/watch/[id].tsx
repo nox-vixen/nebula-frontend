@@ -28,7 +28,7 @@ export default function WatchPage() {
           throw new Error(json.message || "Unable to load stream");
         }
 
-        setStream(json.stream);
+        setStream(json.data);
       } catch (e: any) {
         setError(e.message || "Playback failed");
       } finally {
