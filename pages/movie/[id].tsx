@@ -40,7 +40,7 @@ export default function MoviePage({ movie }: Props) {
 
               <p className="mt-3 text-gray-300">
                 ⭐ {movie.rating?.toFixed(1)} • {movie.runtime} min •{" "}
-                {movie.releaseDate?.slice(0,4)}
+                {movie.releaseDate?.slice(0, 4)}
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -65,11 +65,14 @@ export default function MoviePage({ movie }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const res = await fetch(
-    `/api/movie/${params?.id}`
-  );
+export const getServerSideProps: GetServerSideProps = async ({ params, req }) => {
+  const protocol =
+    process.env.NODE_ENV === "development" ? "http" : "https";
 
+  const host = req.headers.host;
+  const baseUrl = `${protocol}://${host}`;
+
+  const res = await fetch(`${baseUrl}/api/movie/${params?.id}`);
   const json = await res.json();
 
   return {
