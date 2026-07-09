@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import Header from "../../components/Header";
 
 interface Movie {
@@ -29,14 +30,17 @@ export default function MoviePage({ movie }: Props) {
       >
         <div className="flex h-full items-end bg-gradient-to-t from-[#141414] via-[#141414]/60 to-transparent">
           <div className="mx-auto flex w-full max-w-7xl gap-8 px-6 pb-10">
+
             <img
               src={movie.poster}
               alt={movie.title}
               className="hidden w-56 rounded-lg shadow-2xl md:block"
             />
 
-            <div>
-              <h1 className="text-5xl font-bold">{movie.title}</h1>
+            <div className="flex-1">
+              <h1 className="text-5xl font-bold">
+                {movie.title}
+              </h1>
 
               <p className="mt-3 text-gray-300">
                 ⭐ {movie.rating?.toFixed(1)} • {movie.runtime} min •{" "}
@@ -57,7 +61,23 @@ export default function MoviePage({ movie }: Props) {
               <p className="mt-6 max-w-3xl text-lg text-gray-200">
                 {movie.overview}
               </p>
+
+              <div className="mt-8 flex gap-4">
+
+                <Link href={`/watch/${movie.id}`}>
+                  <button className="rounded-md bg-white px-8 py-3 text-lg font-semibold text-black transition hover:scale-105">
+                    ▶ Play
+                  </button>
+                </Link>
+
+                <button className="rounded-md border border-gray-500 px-8 py-3 text-lg transition hover:bg-white/10">
+                  + My List
+                </button>
+
+              </div>
+
             </div>
+
           </div>
         </div>
       </div>
@@ -65,14 +85,22 @@ export default function MoviePage({ movie }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+}) => {
   const protocol =
-    process.env.NODE_ENV === "development" ? "http" : "https";
+    process.env.NODE_ENV === "development"
+      ? "http"
+      : "https";
 
   const host = req.headers.host;
   const baseUrl = `${protocol}://${host}`;
 
-  const res = await fetch(`${baseUrl}/api/movie/${params?.id}`);
+  const res = await fetch(
+    `${baseUrl}/api/movie/${params?.id}`
+  );
+
   const json = await res.json();
 
   return {
