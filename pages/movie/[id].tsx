@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   return {
     props: {
-      movie: json.movie,
+      movie: json.data.movie,
     },
   };
 };
