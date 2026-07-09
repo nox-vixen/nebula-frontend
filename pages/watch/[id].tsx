@@ -6,6 +6,7 @@ interface Stream {
   provider: string;
   url: string;
   quality?: string;
+  format?: string;
 }
 
 export default function WatchPage() {
@@ -19,10 +20,12 @@ export default function WatchPage() {
   useEffect(() => {
     if (!router.isReady || !id) return;
 
-    async function load() {
+    (async () => {
       try {
         const res = await fetch(`/api/watch/${id}`);
         const json = await res.json();
+
+        console.log("WATCH RESPONSE:", json);
 
         if (!res.ok || !json.success) {
           throw new Error(json.message || "Unable to load stream");
@@ -34,36 +37,45 @@ export default function WatchPage() {
       } finally {
         setLoading(false);
       }
-    }
-
-    load();
+    })();
   }, [router.isReady, id]);
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#141414] text-white">
+      <div className="flex h-screen items-center justify-center bg-[#141414] text-white text-xl">
         Loading stream...
       </div>
     );
   }
 
-  if (error || !stream) {
+  if (error) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#141414] text-red-400">
-        {error || "No stream available"}
+        {error}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      <video
-        src={stream.url}
-        controls
-        autoPlay
-        playsInline
-        className="h-screen w-screen"
-      />
+    <div className="min-h-screen bg-black p-6 text-white">
+      <h1 className="mb-4 text-2xl font-bold">Nebula Debug</h1>
+
+      <p><b>ID:</b> {stream?.id}</p>
+      <p><b>Provider:</b> {stream?.provider}</p>
+      <p><b>Quality:</b> {stream?.quality}</p>
+
+      <div className="mt-6 break-all rounded bg-neutral-900 p-4">
+        {stream?.url}
+      </div>
+
+      <a
+        href={stream?.url}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-6 inline-block rounded bg-red-600 px-6 py-3"
+      >
+        Open Stream Directly
+      </a>
     </div>
   );
 }
