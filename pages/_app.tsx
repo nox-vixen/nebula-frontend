@@ -1,17 +1,20 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { AuthProvider } from '../hooks/useAuth'
-import { RecoilRoot } from 'recoil'
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import { RecoilRoot } from "recoil";
+
+import { AuthProvider } from "../hooks/useAuth";
+import { NebulaClusterProvider } from "../context/NebulaClusterContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      {/* Higher Order Component */}
       <AuthProvider>
-        <Component {...pageProps} />
+        <NebulaClusterProvider>
+          <Component {...pageProps} />
+        </NebulaClusterProvider>
       </AuthProvider>
     </RecoilRoot>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
